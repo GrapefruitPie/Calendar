@@ -98,6 +98,7 @@ namespace Calendar
 
         private void DoLoad(object candy)
         {
+            //REVIEW: Нет, так валидацию не делают. Я же показывал - её надо делать через ValidationRule
             if (candy == null || !(candy is TextBox)) return;
             TextBox idBox = (TextBox)candy;
             if (Validation.GetHasError(idBox))
@@ -119,7 +120,9 @@ namespace Calendar
                 MessageBox.Show("Connection error");
                 return;
             }
+            //REVIEW: Ну, было бы неплохо здесь рассказать, почему именно return. Написать куда-то или MessageBox
             if (Friends == null) return;
+            //REVIEW: А если при десериализации вылетит исключение?
             VKfriends cherry = JsonConvert.DeserializeObject<VKfriends>(Friends);
             if (cherry.error != null)
             {
