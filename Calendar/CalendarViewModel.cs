@@ -119,8 +119,25 @@ namespace Calendar
                 MessageBox.Show("Connection error");
                 return;
             }
-            if (Friends == null) return;
-            VKfriends cherry = JsonConvert.DeserializeObject<VKfriends>(Friends);
+            if (Friends == null)
+            {
+                MessageBox.Show("No friends found");
+                return;
+            }
+            VKfriends cherry = null;
+            try
+            {
+                cherry = JsonConvert.DeserializeObject<VKfriends>(Friends);
+            }
+            catch
+            {
+                MessageBox.Show("Deserialization failed");
+            }
+            if (cherry == null)
+            {
+                MessageBox.Show("Something has gone wrong");
+                return;
+            }
             if (cherry.error != null)
             {
                 MessageBox.Show(cherry.error.error_msg);
