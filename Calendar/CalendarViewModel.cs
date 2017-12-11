@@ -69,11 +69,7 @@ namespace Calendar
             LoadFriends = new CakeCommand();
             LoadFriends.Cake = DoLoad;
             Holidays = new List<Holiday>();
-            SqlConnectionStringBuilder cstr = new SqlConnectionStringBuilder();
-            cstr.IntegratedSecurity = true;
-            cstr.DataSource = Environment.MachineName + "\\SQLEXPRESS";
-            cstr.InitialCatalog = "Holidays";
-            using (SqlConnection db = new SqlConnection(cstr.ConnectionString))
+            using (SqlConnection db = new SqlConnection(Properties.Settings.Default.LocalDBConnection))
             {
                 SqlCommand query = new SqlCommand("select title, [date] from Holiday", db);
                 SqlDataReader reader;
@@ -99,17 +95,15 @@ namespace Calendar
         private void DoLoad(object candy) 
         {
             if (candy == null || !(candy is TextBox)) return;
-            TextBox idBox = (TextBox)candy;
-            if (Validation.GetHasError(idBox))
+            if (Validation.GetHasError((TextBox)candy))
             {
-                MessageBox.Show(Validation.GetErrors(idBox)[0].ErrorContent.ToString());
+                MessageBox.Show(Validation.GetErrors((TextBox)candy)[0].ErrorContent.ToString());
                 return;
             }
-
             string Friends;
             try
             {
-                WebRequest request = WebRequest.Create($"https://api.vk.com/method/friends.get?user_id={idBox.Text}&fields=bdate&name_case=nom&v=5.69");
+                WebRequest request = WebRequest.Create($"https://api.vk.com/method/friends.get?user_id={UserID}&fields=bdate&name_case=nom&v=5.69");
                 WebResponse response = request.GetResponse();
                 using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                     Friends = reader.ReadToEnd();
