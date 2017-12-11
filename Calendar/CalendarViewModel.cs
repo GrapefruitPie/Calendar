@@ -96,7 +96,7 @@ namespace Calendar
             }
         }
 
-        private void DoLoad(object candy)
+        private void DoLoad(object candy) 
         {
             if (candy == null || !(candy is TextBox)) return;
             TextBox idBox = (TextBox)candy;
